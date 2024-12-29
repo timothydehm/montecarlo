@@ -1,7 +1,77 @@
-import { neighborhoods } from "./neighborhoods.js"; 
+import { neighborhoods } from "./neighborhoods.js";
 
-// ... (helper functions: getRandomBetween, roundUpAcres, createHistogram, 
-//      calculateSingleScenario, calculateExceedanceRate) ... 
+// Function to get a random number between min and max (inclusive)
+function getRandomBetween(min, max) {
+  return min + Math.random() * (max - min);
+}
+
+// Function to round up acres
+function roundUpAcres(acres) {
+  return Math.ceil(acres * 100) / 100;
+}
+
+// Function to create histogram data
+function createHistogram(data, bins = 20) {
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min;
+  const binWidth = range / bins;
+
+  const histogramBins = Array(bins)
+    .fill(0)
+    .map((_, index) => ({
+      binStart: min + index * binWidth,
+      binEnd: min + (index + 1) * binWidth,
+      count: 0,
+    }));
+
+  data.forEach((value) => {
+    const binIndex = Math.min(
+      Math.floor((value - min) / binWidth),
+      bins - 1
+    );
+    histogramBins[binIndex].count++;
+  });
+
+  return histogramBins.map((bin) => ({
+    binRange: `${bin.binStart.toFixed(1)}-${bin.binEnd.toFixed(1)}`,
+    binStart: bin.binStart,
+    count: bin.count,
+  }));
+}
+
+// Function to calculate a single scenario
+function calculateSingleScenario(params) {
+  const popChangePercent =
+    getRandomBetween(params.minPopChange, params.maxPopChange) / 100;
+  const populationIncrease = Math.round(
+    params.currentPopulation * popChangePercent
+  );
+  const householdSize = getRandomBetween(
+    params.minHouseholdSize,
+    params.maxHouseholdSize
+  );
+  const newHouseholdsNeeded = Math.ceil(populationIncrease / householdSize);
+  const density = getRandomBetween(params.minDensity, params.maxDensity);
+  const newAcresNeeded = roundUpAcres(newHouseholdsNeeded / density);
+
+  return {
+    popChangePercent,
+    populationIncrease,
+    householdSize,
+    newHouseholdsNeeded,
+    density,
+    newAcresNeeded,
+  };
+}
+
+// Function to calculate exceedance rate
+function calculateExceedanceRate(acreageResults, vacantLand) {
+  const exceedingScenarios = acreageResults.filter(
+    (acres) => acres > vacantLand
+  ).length;
+  return ((exceedingScenarios / acreageResults.length) * 100).toFixed(1);
+}
 
 function runSimulation(params) {
   console.log("Running simulation with params:", params);
@@ -15,31 +85,47 @@ function runSimulation(params) {
     allScenarios.push(scenario);
   }
 
-  // ... (calculate mean, percentile90, exceedanceRate, histData) ...
+  acreageResults.sort((a, b) => a - b);
+  const mean = roundUpAcres(
+    acreageResults.reduce((sum, val) => sum + val, 0) / scenarioCount
+  );
+  const percentileIndex = Math.floor(scenarioCount * 0.9);
+  const percentile90 = roundUpAcres(acreageResults[percentileIndex]);
+  const exceedanceRate = calculateExceedanceRate(
+    acreageResults,
+    params.currentVacantLand
+  );
+  const histData = createHistogram(acreageResults);
 
-  updateResults({ 
-    mean, 
-    percentile90, 
-    exceedanceRate, 
-    totalScenarios: scenarioCount 
+  updateResults({
+    mean,
+    percentile90,
+    exceedanceRate,
+    totalScenarios: scenarioCount,
   });
   updateHistogram(histData, params.currentVacantLand, percentile90);
 }
 
 function updateResults(results) {
   const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = ` 
+  resultsDiv.innerHTML = `
     <h3>Summary Results</h3>
-    <p><span class="font-medium">Mean Additional Acres Needed:</span> ${results.mean.toFixed(2)} acres</p>
-    <p><span class="font-medium">90th Percentile Additional Acres Needed:</span> ${results.percentile90.toFixed(2)} acres</p>
-    <p><span class="font-medium">Scenarios Exceeding Current Vacant Land:</span> ${results.exceedanceRate}%</p>
+    <p><span class="font-medium">Mean Additional Acres Needed:</span> ${results.mean.toFixed(
+      2
+    )} acres</p>
+    <p><span class="font-medium">90th Percentile Additional Acres Needed:</span> ${results.percentile90.toFixed(
+      2
+    )} acres</p>
+    <p><span class="font-medium">Scenarios Exceeding Current Vacant Land:</span> ${
+      results.exceedanceRate
+    }%</p>
     <p class="text-sm text-gray-500">Based on ${results.totalScenarios.toLocaleString()} simulated scenarios</p>
   `;
 }
 
 function updateHistogram(data, currentVacantLand, percentile90) {
   const histogramDiv = document.getElementById("histogram");
-  histogramDiv.innerHTML = ""; 
+  histogramDiv.innerHTML = "";
 
   const chart = (
     <ResponsiveContainer width="100%" height={400}>
@@ -69,7 +155,12 @@ function updateHistogram(data, currentVacantLand, percentile90) {
           }}
         />
         <Tooltip />
-        <Bar dataKey="count" fill="#6366f1" name="Scenarios" radius={[2, 2, 0, 0]} />
+        <Bar
+          dataKey="count"
+          fill="#6366f1"
+          name="Scenarios"
+          radius={[2, 2, 0, 0]}
+        />
         <ReferenceLine
           x={currentVacantLand}
           stroke="#dc2626"
@@ -104,19 +195,17 @@ function updateHistogram(data, currentVacantLand, percentile90) {
   ReactDOM.render(chart, histogramDiv);
 }
 
-
 // --- Input Setup and Event Listeners ---
-
 const appDiv = document.getElementById("app");
 appDiv.innerHTML = `
   <h2>Growth-Based Land Need Simulator</h2>
   <p>Simulate land requirements based on population growth scenarios</p>
 
-  <div> 
+  <div>
     <label for="neighborhood">Select Neighborhood:</label>
     <select id="neighborhood">
       <option value="">Select a neighborhood...</option>
-      ${neighborhoods.map(n => `<option value="${n.id}">${n.name}</option>`).join('')} 
+      ${neighborhoods.map((n) => `<option value="${n.id}">${n.name}</option>`).join("")}
     </select>
   </div>
 
