@@ -1,4 +1,4 @@
-export const neighborhoods: neighborhoods[] = [
+export const neighborhoods = [
   {
     id: "bellaire-puritas",
     name: "Bellaire-Puritas",
