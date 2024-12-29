@@ -1,7 +1,4 @@
-// script.js
-const neighborhoods = [
-  // ... your neighborhood data here 
-];
+import { neighborhoods } from "./neighborhoods.js";
 
 // Function to get a random number between min and max (inclusive)
 function getRandomBetween(min, max) {
@@ -13,64 +10,118 @@ function roundUpAcres(acres) {
   return Math.ceil(acres * 100) / 100;
 }
 
-// Function to create histogram data
+// Function to create histogram data (same as before)
 function createHistogram(data, bins = 20) {
-  // ... (same as your React code)
+  // ... (same code as you provided) 
 }
 
-// Function to calculate a single scenario
+// Function to calculate a single scenario (takes params as argument)
 function calculateSingleScenario(params) {
-  // ... (same as your React code, but takes 'params' as an argument)
+  const popChangePercent =
+    getRandomBetween(params.minPopChange, params.maxPopChange) / 100;
+  const populationIncrease = Math.round(
+    params.currentPopulation * popChangePercent
+  );
+  const householdSize = getRandomBetween(
+    params.minHouseholdSize,
+    params.maxHouseholdSize
+  );
+  const newHouseholdsNeeded = Math.ceil(populationIncrease / householdSize);
+  const density = getRandomBetween(params.minDensity, params.maxDensity);
+  const newAcresNeeded = roundUpAcres(newHouseholdsNeeded / density);
+
+  return {
+    popChangePercent,
+    populationIncrease,
+    householdSize,
+    newHouseholdsNeeded,
+    density,
+    newAcresNeeded,
+  };
 }
 
-// Function to calculate exceedance rate
+// Function to calculate exceedance rate (same as before)
 function calculateExceedanceRate(acreageResults, vacantLand) {
-  // ... (same as your React code)
+  // ... (same code as you provided)
 }
 
-// Function to run the simulation
+// Function to run the simulation (takes params as argument)
 function runSimulation(params) {
-  // ... (same logic as your React code, but takes 'params' as an argument)
+  console.log("Running simulation with params:", params);
+  const scenarioCount = 10000;
+  const allScenarios = [];
+  const acreageResults = [];
 
-  // Update the UI with results (see UI updates below)
+  for (let i = 0; i < scenarioCount; i++) {
+    const scenario = calculateSingleScenario(params);
+    acreageResults.push(scenario.newAcresNeeded);
+    allScenarios.push(scenario);
+  }
+
+  acreageResults.sort((a, b) => a - b);
+  const mean = roundUpAcres(
+    acreageResults.reduce((sum, val) => sum + val, 0) / scenarioCount
+  );
+  const percentileIndex = Math.floor(scenarioCount * 0.9);
+  const percentile90 = roundUpAcres(acreageResults[percentileIndex]);
+  const exceedanceRate = calculateExceedanceRate(
+    acreageResults,
+    params.currentVacantLand
+  );
+  const histData = createHistogram(acreageResults);
+
+  // Update the UI with the results
+  updateResults({
+    mean,
+    percentile90,
+    exceedanceRate,
+    totalScenarios: scenarioCount,
+  });
+  updateHistogram(histData, params.currentVacantLand, percentile90);
 }
 
-// --- UI Updates (using DOM manipulation) ---
+// --- UI Updates ---
 
 function updateResults(results) {
-  const resultsDiv = document.getElementById('results');
-  resultsDiv.innerHTML = `
-    <h3>Summary Results</h3>
-    <p><span class="font-medium">Mean Additional Acres Needed:</span> ${results.mean.toFixed(2)} acres</p>
-    <p><span class="font-medium">90th Percentile Additional Acres Needed:</span> ${results.percentile90.toFixed(2)} acres</p>
-    <p><span class="font-medium">Scenarios Exceeding Current Vacant Land:</span> ${results.exceedanceRate}%</p>
-    <p class="text-sm text-gray-500">Based on ${results.totalScenarios.toLocaleString()} simulated scenarios</p>
-  `;
+  // ... (same code as you provided)
 }
 
-// ... (Similar functions to update other parts of the UI)
+// Function to update the histogram (using Recharts)
+function updateHistogram(data, currentVacantLand, percentile90) {
+  const histogramDiv = document.getElementById("histogram");
+  histogramDiv.innerHTML = ""; // Clear previous chart
+
+  const chart = (
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart
+        data={data}
+        margin={{ top: 30, right: 40, left: 60, bottom: 30 }}
+        barSize={16}
+        style={{ fontSize: "12px", fontFamily: "system-ui" }}
+      >
+        {/* ... (rest of your Recharts configuration, 
+              including XAxis, YAxis, Tooltip, etc.) */}
+      </BarChart>
+    </ResponsiveContainer>
+  );
+
+  // Render the chart into the histogramDiv
+  ReactDOM.render(chart, histogramDiv);
+}
 
 // --- Event Listeners ---
 
-// Get references to input elements and buttons
-const populationInput = document.getElementById('currentPopulation');
-const vacantLandInput = document.getElementById('currentVacantLand');
-// ... (get references to other input elements)
-const runButton = document.getElementById('runSimulation');
+// ... (get references to input elements and buttons)
 
-// Add event listeners for input changes and button clicks
-populationInput.addEventListener('change', () => {
-  // Update params object
-});
+// Add event listeners for input changes
+// ... (add event listeners to update the params object)
 
-// ... (add event listeners for other inputs)
-
-runButton.addEventListener('click', () => {
+runButton.addEventListener("click", () => {
   // Gather params from input values
   const params = {
     currentPopulation: parseFloat(populationInput.value),
     currentVacantLand: parseFloat(vacantLandInput.value),
-    // ... get other params
+    // ... get other params from input values
   };
 
   runSimulation(params);
@@ -78,8 +129,7 @@ runButton.addEventListener('click', () => {
 
 // --- Initial UI Setup ---
 
-// Create initial input elements, result display areas, etc.
-const appDiv = document.getElementById('app');
+const appDiv = document.getElementById("app");
 appDiv.innerHTML = `
   <h2>Growth-Based Land Need Simulator</h2>
   <p>Simulate land requirements based on population growth scenarios</p>
