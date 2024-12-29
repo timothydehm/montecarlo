@@ -1,12 +1,3 @@
-export interface neighborhoods {
-  id: string;
-  name: string;
-  population2010: number;
-  population2020: number;
-  populationChange: number;
-  vacantLand2023: number;
-}
-
 export const neighborhoods: neighborhoods[] = [
   {
     id: "bellaire-puritas",
