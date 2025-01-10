@@ -1,29 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Growth-Based Land Need Simulator</title>
-  <style>
-    /* Add your basic styles here */
-    body {
-      font-family: sans-serif;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    input[type="number"] {
-      width: 100px;
-    }
-  </style>
+  <title>Cleveland Land Use Simulator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-  <div id="app"></div> 
-
-  <script src="https://cdn.jsdelivr.net/npm/recharts@2.1.16/umd/Recharts.min.js"></script>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-
-  <script src="neighborhoods.js" type="module"></script> 
-  <script src="script.js" type="module"></script> 
+  <div id="app"></div>
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  
+  <!-- Load application code -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
