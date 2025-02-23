@@ -3,17 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Growth-Based Land Need Simulator</title>
+  <!-- Chart.js for histogram rendering -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Optional: If you need Chart.js annotation support, include the plugin:
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
-  -->
-  <style>
-    body { font-family: sans-serif; }
-    label { display: block; margin-top: 10px; }
-    input, select, button { margin-top: 5px; }
-    #results { margin-top: 20px; }
-    #histogramContainer { width: 600px; height: 400px; margin-top: 20px; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
@@ -75,6 +67,7 @@
     </div>
   </div>
 
-
+  <!-- Use type="module" to enable ES6 imports -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
