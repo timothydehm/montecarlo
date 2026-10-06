@@ -1,4 +1,3 @@
-```markdown
 # 10,000 Futures: Monte Carlo Land Use Simulation & Explorer
 
 An interactive, browser-based spatial simulation tool designed to model, forecast, and visualize probabilistic land use scenarios for urban land bank parcels. Built for planners, community developers, and urban researchers, this application runs stochastic Monte Carlo simulations directly in the client to project alternative futures for vacant land management.
@@ -7,7 +6,7 @@ An interactive, browser-based spatial simulation tool designed to model, forecas
 
 ## Key Features
 
-* **Stochastic Land Use Modeling:** Simulate thousands of potential future conditions across vacant parcels based on configurable transition probabilities (e.g., green space conversion, residential infill, commercial development, or community stewardship).
+* **Stochastic Land Use Modeling:** Simulate thousands of potential future conditions across vacant parcels based on configurable transition probabilities.
 * **Interactive Web Mapping:** Powered by Leaflet.js with multi-layer basemap switching (Carto Light, Esri Satellite, OpenStreetMap) for precise spatial context.
 * **Real-time Analytics Dashboard:** Instantly compute aggregate metrics—tracking parcel counts and total acreage dynamically as scenarios evolve or get modified.
 * **Scenario Branching & Version Control:** Fork simulations into distinct "branches" to compare alternative policy outcomes side-by-side without mutating baseline data.
@@ -26,20 +25,17 @@ Because the application fetches local spatial datasets and runs asynchronously i
 ### Installation & Execution
 
 1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/timothydehm/montecarlo.git](https://github.com/timothydehm/montecarlo.git)
-   cd montecarlo
-   ```
+
+    git clone https://github.com/timothydehm/montecarlo.git
+    cd montecarlo
 
 2. **Start a local development server:**
-   * **Using Python:**
-     ```bash
-     python3 -m http.server 8000
-     ```
-   * **Using Node.js (`http-server`):**
-     ```bash
-     npx http-server
-     ```
+
+    *Using Python:*
+    python3 -m http.server 8000
+
+    *Using Node.js (http-server):*
+    npx http-server
 
 3. **Open the application:**
    Navigate to `http://localhost:8000` in your browser.
@@ -65,7 +61,7 @@ The application consumes standard **GeoJSON** feature collections. To enable ful
 ## Tech Stack
 
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript (ES6+)
-* **Mapping Library:** [Leaflet.js](https://leafletjs.com/)
+* **Mapping Library:** Leaflet.js
 * **Data Interchange:** GeoJSON
 
 ---
@@ -73,5 +69,3 @@ The application consumes standard **GeoJSON** feature collections. To enable ful
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-```
