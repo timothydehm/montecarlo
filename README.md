@@ -29,35 +29,26 @@ Because the application fetches local spatial datasets and runs asynchronously i
    ```bash
    git clone [https://github.com/timothydehm/montecarlo.git](https://github.com/timothydehm/montecarlo.git)
    cd montecarlo
-
-```
+   ```
 
 2. **Start a local development server:**
-* **Using Python:**
-```bash
-python3 -m http.server 8000
-
-```
-
-
-* **Using Node.js (`http-server`):**
-```bash
-npx http-server
-
-```
-
-
-
+   * **Using Python:**
+     ```bash
+     python3 -m http.server 8000
+     ```
+   * **Using Node.js (`http-server`):**
+     ```bash
+     npx http-server
+     ```
 
 3. **Open the application:**
-Navigate to `http://localhost:8000` in your browser.
+   Navigate to `http://localhost:8000` in your browser.
 
 ---
 
 ## Data Structure
 
 The application consumes standard **GeoJSON** feature collections. To enable full analytical capability, feature `properties` should include:
-
 * `landUse` *(String)*: Current or assigned category (`Unassigned`, `Green Space`, `Residential`, `Commercial`, `Other`).
 * `total_square_ft` *(Number)*: Parcel area in square feet, utilized for automated acreage calculations.
 
@@ -66,7 +57,7 @@ The application consumes standard **GeoJSON** feature collections. To enable ful
 ## Usage Guide
 
 1. **Simulate & Inspect:** Click on individual parcels on the map to manually override classifications, or trigger batch Monte Carlo simulations through the control panel.
-2. **Manage Versions:** Use the **Version Control** section to create and switch between distinct planning scenarios.
+2. **Manage Versions:** Use the **Version Control** section to create and switch between distinct planning scenarios. 
 3. **Export Results:** Click **Download GeoJSON** to export the active simulation branch complete with updated property attributes and timestamps.
 
 ---
@@ -82,7 +73,5 @@ The application consumes standard **GeoJSON** feature collections. To enable ful
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-```
 
 ```
